@@ -26,6 +26,7 @@ extends CharacterBody2D
 @export var dash_end_speed: float = 160.0
 
 @export var camera_lerp: float = 8.0   # higher = snappier follow
+@export var cam_dead_zone := Vector2(20.0, 10.0)   # how far you can move before the camera follows
 var _cam_pos := Vector2.ZERO
 
 var _coyote_timer := 0.0
@@ -47,8 +48,11 @@ func _ready() -> void:
 	_ensure_action("move_down",  [KEY_S, KEY_DOWN])
 	_ensure_action("jump",       [KEY_SPACE, KEY_W, KEY_UP])
 	_ensure_action("dash",       [KEY_SHIFT, KEY_K])
-	camera.position_smoothing_enabled = true
-	camera.position_smoothing_speed = 7.0
+	camera.position_smoothing_enabled = false
+	camera.process_callback = Camera2D.CAMERA2D_PROCESS_PHYSICS
+	camera.top_level = true
+	_cam_pos = global_position
+	camera.global_position = _cam_pos.round()
 
 func _ensure_action(action: StringName, keys: Array) -> void:
 	if InputMap.has_action(action):
@@ -61,6 +65,14 @@ func _ensure_action(action: StringName, keys: Array) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	
+	var diff := global_position - _cam_pos
+	if absf(diff.x) > cam_dead_zone.x:
+		_cam_pos.x = global_position.x - signf(diff.x) * cam_dead_zone.x
+	if absf(diff.y) > cam_dead_zone.y:
+		_cam_pos.y = global_position.y - signf(diff.y) * cam_dead_zone.y
+	camera.global_position = _cam_pos.round()
+	
 	var input_x := Input.get_axis("move_left", "move_right")
 	if input_x != 0.0:
 		_facing = signf(input_x)
@@ -146,6 +158,7 @@ func _update_animation(input_x: float) -> void:
 		anim = "run"
 
 	sprite.flip_h = _facing < 0.0
+	sprite.offset.x = 2.0 if _facing < 0.0 else 0.0
 
 	if sprite.sprite_frames and sprite.sprite_frames.has_animation(anim):
 		if sprite.animation != anim:
