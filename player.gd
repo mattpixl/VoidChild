@@ -25,6 +25,9 @@ extends CharacterBody2D
 @export var dash_time: float = 0.15
 @export var dash_end_speed: float = 160.0
 
+@export var camera_lerp: float = 8.0   # higher = snappier follow
+var _cam_pos := Vector2.ZERO
+
 var _coyote_timer := 0.0
 var _jump_buffer_timer := 0.0
 var _var_jump_timer := 0.0

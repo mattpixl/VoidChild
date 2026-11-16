@@ -27,7 +27,7 @@ position = Vector2(-14, 94.5)
 shape = SubResource("RectangleShape2D_ihfcg")
 
 [node name="CharacterBody2D" parent="." unique_id=755965021 instance=ExtResource("2_hbghi")]
-position = Vector2(13, 17)
+position = Vector2(80, 16)
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=167398763]
 position = Vector2(-13, -17)
