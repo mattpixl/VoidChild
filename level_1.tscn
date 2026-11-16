@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://bkwsc7iou4v7u"]
+
+[ext_resource type="Texture2D" uid="uid://dg27odlyn4vak" path="res://Spites/Level1/Sprite-0003.png" id="1_hbghi"]
+[ext_resource type="PackedScene" uid="uid://c5qtqd8dxio5w" path="res://Player.tscn" id="2_hbghi"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hn12h"]
+size = Vector2(182, 31)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ihfcg"]
+size = Vector2(112, 37)
+
+[node name="Level1" type="Node2D" unique_id=993019532]
+position = Vector2(117, 43)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=202478712]
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=1937247256]
+position = Vector2(63, 117)
+texture = ExtResource("1_hbghi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=523878891]
+position = Vector2(21, 60.5)
+shape = SubResource("RectangleShape2D_hn12h")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D" unique_id=152912047]
+position = Vector2(-14, 94.5)
+shape = SubResource("RectangleShape2D_ihfcg")
+
+[node name="CharacterBody2D" parent="." unique_id=755965021 instance=ExtResource("2_hbghi")]
+position = Vector2(13, 17)
+
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=167398763]
+position = Vector2(-13, -17)
+offset = Vector2(0, 20)
