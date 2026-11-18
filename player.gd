@@ -25,6 +25,10 @@ extends CharacterBody2D
 @export var dash_time: float = 0.15
 @export var dash_end_speed: float = 160.0
 
+@export var hidden_sprite: Sprite2D          # drag the Sprite2D here in the Inspector
+@export var reveal_radius: float = 40.0
+@export var reveal_offset := Vector2(1, 4)   # circle center relative to the player (matches your collision box)
+
 @export var camera_lerp: float = 8.0   # higher = snappier follow
 @export var cam_dead_zone := Vector2(20.0, 10.0)   # how far you can move before the camera follows
 var _cam_pos := Vector2.ZERO
@@ -63,8 +67,23 @@ func _ensure_action(action: StringName, keys: Array) -> void:
 		ev.physical_keycode = key
 		InputMap.action_add_event(action, ev)
 
-
 func _physics_process(delta: float) -> void:
+	_move(delta)
+	_update_camera()
+	if hidden_sprite and hidden_sprite.material:
+		var mat := hidden_sprite.material as ShaderMaterial
+		mat.set_shader_parameter("center", (global_position + reveal_offset).round())
+		mat.set_shader_parameter("radius", reveal_radius)
+
+func _update_camera() -> void:
+	var diff := global_position - _cam_pos
+	if absf(diff.x) > cam_dead_zone.x:
+		_cam_pos.x = global_position.x - signf(diff.x) * cam_dead_zone.x
+	if absf(diff.y) > cam_dead_zone.y:
+		_cam_pos.y = global_position.y - signf(diff.y) * cam_dead_zone.y
+	camera.global_position = _cam_pos.round()
+
+func _move(delta: float) -> void:
 	
 	var diff := global_position - _cam_pos
 	if absf(diff.x) > cam_dead_zone.x:
